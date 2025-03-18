@@ -122,7 +122,7 @@ export default function PDFSplit() {
           pdfFile.getPageCount() <= MaxPagesForSingleDownload
           ? <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 w-full">
             {splitPageDocs.map((page, index) => {
-              return <Card key={index} className="max-w-xs xl:max-w-sm">
+              return <Card key={index}>
                 <CardHeader>
                   <CardTitle>Page {index + 1}</CardTitle>
                 </CardHeader>
