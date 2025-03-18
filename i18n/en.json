@@ -65,6 +65,13 @@
           "title": "Hex to HSL",
           "description": "Convert a hex color to HSL format"
         }
+      },
+      "pdf": {
+        "title": "PDF",
+        "split": {
+          "title": "Split",
+          "description": "Split a PDF into multiple files"
+        }
       }
     }
   },
@@ -99,6 +106,16 @@
         "description": "Converts a hex color to HSL format.",
         "options": {
             "valuesOnly": "Include in hsl(...)"
+        }
+      }
+    },
+    "pdf": {
+      "split": {
+        "title": "Split PDF",
+        "description": "Split a PDF file into multiple files.",
+        "actions": {
+          "downloadAll": "Download all split pages",
+          "dropFiles": "Drag & drop files here, or click to select"
         }
       }
     }

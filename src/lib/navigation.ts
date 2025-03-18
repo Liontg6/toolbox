@@ -1,4 +1,4 @@
-import { BlendingModeIcon, ExclamationTriangleIcon, GitHubLogoIcon, TextIcon } from "@radix-ui/react-icons";
+import { BlendingModeIcon, ExclamationTriangleIcon, FileTextIcon, GitHubLogoIcon, TextIcon } from "@radix-ui/react-icons";
 
 interface NavigationGroupTranslationKey {
   translationKey: string;
@@ -131,6 +131,18 @@ export const menuData: Array<NavigationGroupTranslationKey & DisplayInMenuField 
           href: "/color/hex-to-hsl",
           displayInMenu: true,
           icon: BlendingModeIcon,
+        },
+      ],
+    },
+    {
+      translationKey: "tools.pdf",
+      displayInMenu: true,
+      items: [
+        {
+          translationKey: "split",
+          href: "/pdf/split",
+          displayInMenu: true,
+          icon: FileTextIcon,
         },
       ],
     }

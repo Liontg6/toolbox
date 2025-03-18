@@ -1,13 +1,21 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { FilePlusIcon, UpdateIcon } from "@radix-ui/react-icons";
+import { FilePlusIcon } from "@radix-ui/react-icons";
 
 
 interface DropAreaProps {
-  onFilesAdded: (files: File[]) => void;
+  readonly onFilesAdded: (files: File[]) => void;
+  readonly children?: React.ReactNode;
+  readonly multiple?: boolean;
+  readonly accept?: string;
 }
 
-export default function DropArea({ onFilesAdded }: DropAreaProps) {
+export default function DropArea({
+    onFilesAdded,
+    children,
+    multiple = true,
+    accept = "",
+  }: DropAreaProps) {
   const [isDragging, setIsDragging] = useState(false);
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -41,10 +49,16 @@ export default function DropArea({ onFilesAdded }: DropAreaProps) {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <input type="file" multiple onChange={handleFileSelect} className="hidden" id="fileInput" />
+        <input
+          type="file"
+          multiple={multiple}
+          accept={accept}
+          onChange={handleFileSelect}
+          className="hidden"
+          id="fileInput" />
         <label htmlFor="fileInput" className="block cursor-pointer">
           <FilePlusIcon className="w-12 h-12 mx-auto mt-4 mb-2" />
-          <p className="">{} Drag & drop files here, or click to select</p>
+          <p className="">{children}</p>
         </label>
       </CardContent>
     </Card>
