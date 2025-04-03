@@ -48,7 +48,9 @@ export default function URLEncoding() {
 
       <h3 className="header-section-3">{t("howItWorks.title")}</h3>
       <ul className="ps-4 mt-0 space-y-1 list-disc list-none [&>*]:before:content-['→'] [&>*]:before:pr-4">
-        {t.rich("howItWorks.description")}
+        {t.rich("howItWorks.description", {
+          "li": (children) => <li className="text-muted-foreground">{children}</li>,
+        })}
       </ul>
     </Section>
     <Section variant={"default"}>
