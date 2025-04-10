@@ -88,6 +88,13 @@
           "title": "Split",
           "description": "Split a PDF into multiple files"
         }
+      },
+      "network": {
+        "title": "Networking",
+        "ipcalc": {
+          "title": "IPv4 Calculator",
+          "description": "Description"
+        }
       }
     }
   },
@@ -133,6 +140,22 @@
           "downloadAll": "Download all split pages",
           "dropFiles": "Drag & drop files here, or click to select"
         }
+      }
+    },
+    "network": {
+      "ipcalc": {
+        "title": "IPv4 Calculator",
+        "description": "Description",
+        "inputAddress": "Network / Host in network",
+        "inputPrefix": "CIDR / Subnet Prefix",
+        "buttonCalculate": "Calculate",
+        "resultNetmask": "Netmask",
+        "resultWildcard": "Wildcard mask",
+        "resultNetwork": "Network",
+        "resultFirstHost": "First Host",
+        "resultLastHost": "Last Host",
+        "resultBroadcast": "Broadcast",
+        "resultAmountHost": "Number of hosts"
       }
     }
   },
