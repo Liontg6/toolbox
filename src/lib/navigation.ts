@@ -154,6 +154,18 @@ export const menuData: Array<NavigationGroupTranslationKey & DisplayInMenuField 
           icon: FileTextIcon,
         },
       ],
+    },
+    {
+      translationKey: "tools.network",
+      displayInMenu: true,
+      items: [
+        {
+          translationKey: "ipcalc",
+          href: "/network/ip-calculator",
+          displayInMenu: true,
+          icon: FileTextIcon,
+        },
+      ],
     }
   ];
 
