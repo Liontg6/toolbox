@@ -129,6 +129,12 @@ export const menuData: Array<NavigationGroupTranslationKey & DisplayInMenuField 
           displayInMenu: true,
           icon: UpdateIcon,
         },
+        {
+          translationKey: "UnicodeBinary",
+          href: "/encoding/UnicodeBinary",
+          displayInMenu: true,
+          icon: UpdateIcon,
+        }
       ],
     },
     {

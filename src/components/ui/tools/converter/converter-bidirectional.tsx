@@ -12,11 +12,11 @@ import useURLMode from "@/lib/hooks/useURLMode";
 
 interface ConverterBidirectionalProps {
   /**
-   * This will be refered to as encoding in the UI
+   * This will be referred to as encoding in the UI
    */
   a2b: (input: string) => string;
   /**
-   * This will be refered to as decoding in the UI
+   * This will be referred to as decoding in the UI
    */
   b2a: (input: string) => string;
   translationKey: string;
@@ -38,7 +38,7 @@ export const ConverterBidirectional: React.FC<ConverterBidirectionalProps> = ({
   const t_parent = useTranslations(translationKey);
 
   const { mode, toggleMode } = useURLMode([...modes], "encoding");
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState("0");
   const [output, setOutput] = useState("");
 
   const handleModeChange = () => {
