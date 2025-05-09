@@ -73,6 +73,10 @@
         "base64": {
           "title": "Base64 En-/Decoding",
           "description": "Encode or decode text as Base64"
+        },
+        "UnicodeBinary": {
+          "title": "Unicode Binary En-/Decoding",
+          "description": "Encode or decode text as Unicode Binary"
         }
       },
       "color": {
@@ -114,6 +118,12 @@
         "b2a_result": "Decoded as a string:",
         "a2b_title": "Base64 Encoding",
         "b2a_title": "Base64 Decoding"
+      },
+      "UnicodeBinary": {
+        "a2b_result": "Encoded as Unicode:",
+        "b2a_result": "Decoded as binary:",
+        "a2b_title": "Binary to Unicode",
+        "b2a_title": "Unicode to Binary"
       }
     },
     "color": {
