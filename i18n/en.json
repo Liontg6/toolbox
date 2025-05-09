@@ -146,9 +146,7 @@
       "ipcalc": {
         "title": "IPv4 Calculator",
         "description": "Description",
-        "inputAddress": "Network / Host in network",
-        "inputPrefix": "CIDR / Subnet Prefix",
-        "buttonCalculate": "Calculate",
+        "inputAddress": "Network / CIDR",
         "resultNetmask": "Netmask",
         "resultWildcard": "Wildcard mask",
         "resultNetwork": "Network",

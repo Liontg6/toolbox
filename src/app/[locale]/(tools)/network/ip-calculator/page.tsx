@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { CopyToClipboard } from "@/components/ui/copyToClipboard";
 import { Input } from "@/components/ui/input";
+import { IpAddressInput } from "@/components/ui/ipAddressInput";
 import { Label } from "@/components/ui/label";
 import { Section } from "@/components/ui/Section";
 import { Separator } from "@/components/ui/separator";
@@ -54,21 +55,18 @@ export default function IPCalculator () {
             <h1 className="header-section-1 mb-6">{t("title")}</h1>
             <span className="flex flex-col md:flex-row gap-4 items-center">
                 <span className="flex flex-row items-center gap-2 w-full">
-                    <div className="flex flex-col w-full items-center">
+                    <div className="flex flex-col">
                         <Label className="w-full pl-1 pr-1 pb-2" htmlFor="input">{t("inputAddress")}</Label>
-                        <Input value={ip} onChange={(e) => setIp(e.currentTarget.value)} />
+                        <IpAddressInput valueIp={ip} valueCidr={prefixLength} onChange={(ip, cidr) => {
+                            setIp(ip);
+                            setPrefixLength(+cidr);
+                        }} />
                     </div>
-                    <span>
-                        /
-                    </span>
-                    <div className="flex flex-col w-full">
-                        <Label className="w-full pl-1 pr-1 pb-2" htmlFor="input">{t("inputPrefix")}</Label>
-                        <Input value={prefixLength} onChange={(e) => setPrefixLength(+e.currentTarget.value)} />
-                    </div>
+
                 </span>
             </span>
 
-            <Separator orientation="horizontal" className="mt-4" />
+            <Separator orientation="horizontal" className="my-4 md:my-8" />
 
             <span className="w-1/2 space-y-1">
                 <Label className="w-full pl-1 pr-1 pb-2" htmlFor="input">{t("resultNetmask")}</Label>
