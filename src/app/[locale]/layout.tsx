@@ -60,7 +60,7 @@ export default async function LocaleLayout({
             <Header />
             {children}
             <footer className="container border-t border-border pt-8 pb-8 flex flex-col">
-              <h1 className="text-xs font-bold tracking-tight scroll-m-20 mb-4">All rights reserved. Morten Renner 2024 ©</h1>
+              <h1 className="text-xs font-bold tracking-tight scroll-m-20 mb-4">Copyright © 2024-2025 Morten Renner. Licensed under AGPL-3.0.</h1>
               <Link href="/privacy" className="text-xs font-normal tracking-tight">Privacy Policy</Link>
               <Link href="/imprint" className="text-xs font-normal tracking-tight">Impressum - Legal Notice</Link>
             </footer>
