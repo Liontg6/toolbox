@@ -3,6 +3,7 @@ import { NodeState } from "@/lib/graph/NodeState";
 import { Node } from "@/components/graph/Node";
 import { useEffect, useRef, useState } from "react";
 import { Position } from "@/lib/graph/Position.type";
+import { cn } from "@/lib/utils";
 
 export function Graph({
     initialNodeStates,
@@ -55,7 +56,7 @@ export function Graph({
     return (
         <div
             ref={graphRef}
-            className="relative rounded bg-background text-foreground p-4 shadow-md overflow-scroll w-full aspect-video"
+            className={cn("relative rounded bg-background text-foreground p-4 shadow-md overflow-scroll w-full aspect-video", currentlyDraggingNode ? "cursor-grabbing" : undefined)}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
         >

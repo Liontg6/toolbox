@@ -9,7 +9,11 @@ export default function Home() {
         <Section className="flex flex-col gap-4">
             <h1 className="header-section-1">Graph based tools Debug</h1>
 
-            <Graph initialNodeStates={[createNode("textToBase64", "1", {x: 0, y: 0})]} />
+            <Graph initialNodeStates={[
+                createNode("input", "1", { x: 50, y: 50 }),
+                createNode("textToBase64", "2", { x: 250, y: 50 }),
+                createNode("output", "3", { x: 450, y: 50 }),
+            ]} />
         </Section>
     );
 }

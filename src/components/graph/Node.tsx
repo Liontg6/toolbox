@@ -16,8 +16,9 @@ export function Node({
         <div
             className="absolute rounded bg-primary text-primary-foreground p-2 shadow-md"
             style={{
-                left: nodeState.position.x,
-                top: nodeState.position.y,
+            left: nodeState.position.x,
+            top: nodeState.position.y,
+            transition: "left 0.05s ease-out, top 0.05s ease-out",
             }}
             onMouseDown={onMouseDown}
             onMouseMove={onMouseMove}
