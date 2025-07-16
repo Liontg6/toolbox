@@ -1,7 +1,7 @@
 import { NodeState } from "@/lib/graph/NodeState";
 
 import { Node } from "@/components/graph/Node";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Position } from "@/lib/graph/Position.type";
 
 export function Graph({
@@ -14,7 +14,7 @@ export function Graph({
     );
 
     const [currentlyDraggingNode, setCurrentlyDraggingNode] = useState<
-        { nodeId: string; startPosition: Position } | null
+        { nodeId: string; startPosition: Position, offset: Position } | null
     >(null);
 
     const graphRef = useRef<HTMLDivElement>(null);
@@ -31,44 +31,55 @@ export function Graph({
         );
     };
 
-    console.log(nodes);
+    const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (currentlyDraggingNode) {
+            const newPosition = {
+                x: e.clientX - (graphRef.current?.offsetLeft || 0) + currentlyDraggingNode.offset.x,
+                y: e.clientY - (graphRef.current?.offsetTop || 0) + currentlyDraggingNode.offset.y,
+            };
+            setNodePosition(currentlyDraggingNode.nodeId, newPosition);
+        }
+    };
+    const onMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (currentlyDraggingNode) {
+            setCurrentlyDraggingNode(null);
+        }
+    };
+
+    useEffect(() => {
+        console.log("currentlyDraggingNode changed", currentlyDraggingNode);
+    }, [currentlyDraggingNode]);
 
     return (
         <div
             ref={graphRef}
             className="relative rounded bg-background text-foreground p-4 shadow-md overflow-scroll w-full aspect-video"
-            onDragOver={(e) => {
-                console.log("drag over", e);
-                setNodePosition(
-                    currentlyDraggingNode!.nodeId,
-                    {
-                        x: e.clientX - (graphRef.current?.offsetLeft || 0), // Center the node
-                        y: e.clientY - (graphRef.current?.offsetTop || 0),
-                    },
-                );
-            }}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
         >
             {nodes.map((nodeState) => (
                 <Node
                     nodeState={nodeState}
-                    onDragStart={(e) => {
-                        console.log("drag start", e);
+                    onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         setCurrentlyDraggingNode({
                             nodeId: nodeState.id,
                             startPosition: {
-                                x: e.clientX,
-                                y: e.clientY,
+                                x: e.clientX - (graphRef.current?.offsetLeft || 0),
+                                y: e.clientY - (graphRef.current?.offsetTop || 0),
+                            },
+                            offset: {
+                                x: nodeState.position.x - (e.clientX - (graphRef.current?.offsetLeft || 0)),
+                                y: nodeState.position.y - (e.clientY - (graphRef.current?.offsetTop || 0)),
                             },
                         });
-                        dragRef.current!.current = e.currentTarget;
+                        dragRef.current.current = e.currentTarget;
                     }}
-                    onDrag={(e) => {
-                        console.log("dragging", e);
-                    }}
-                    onDragEnd={(e) => {
-                        console.log("drag end", e);
-                        setCurrentlyDraggingNode(null);
-                    }}
+                    onMouseMove={onMouseMove}
+                    onMouseUp={onMouseUp}
                 />
             ))}
         </div>

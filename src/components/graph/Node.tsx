@@ -3,14 +3,14 @@ import { DragEventHandler } from "react";
 
 export function Node({
     nodeState,
-    onDragStart,
-    onDrag,
-    onDragEnd,
+    onMouseDown,
+    onMouseMove,
+    onMouseUp,
 }: {
     nodeState: NodeState<any, any>;
-    onDragStart: DragEventHandler<HTMLDivElement>;
-    onDrag: DragEventHandler<HTMLDivElement>;
-    onDragEnd: DragEventHandler<HTMLDivElement>;
+    onMouseDown: DragEventHandler<HTMLDivElement>;
+    onMouseMove: DragEventHandler<HTMLDivElement>;
+    onMouseUp: DragEventHandler<HTMLDivElement>;
 }) {
     return (
         <div
@@ -19,10 +19,9 @@ export function Node({
                 left: nodeState.position.x,
                 top: nodeState.position.y,
             }}
-            draggable="true"
-            onDragStart={onDragStart}
-            onDrag={onDrag}
-            onDragEnd={onDragEnd}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
         >
             {nodeState.id} {nodeState.name}
         </div>
