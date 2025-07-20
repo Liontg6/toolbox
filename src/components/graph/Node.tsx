@@ -23,6 +23,7 @@ export function Node({
                 console.log(`Connecting ${fromId} to ${toId}`);
             }}
             nodeId={nodeState.id}
+            ioName={input.name}
         />
     ));
 
@@ -35,6 +36,7 @@ export function Node({
                 console.log(`Connecting ${fromId} to ${toId}`);
             }}
             nodeId={nodeState.id}
+            ioName={output.name}
         />
     ));
 

@@ -22,5 +22,9 @@ export const createNode: (
         ...nodeDefinition,
         id,
         position,
+        getAllIO: () => [
+            ...nodeDefinition.inputs,
+            ...nodeDefinition.outputs,
+        ]
     };
 };

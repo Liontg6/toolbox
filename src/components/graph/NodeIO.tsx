@@ -1,20 +1,41 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext } from "react";
 import { GraphContext } from "./Graph";
+import { isEdgeDropValid } from "@/lib/graph/isEdgeDropValid";
+
+export type NodeIOIdentifier = {
+    nodeId: string;
+    nodeIOName: string;
+}
 
 type NodeIOProps = {
     type: "input" | "output";
     data_type: string;
     onConnectNodes: (fromId: string, toId: string) => void;
     nodeId: string;
+    ioName: string;
 };
 
-export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, data_type }) => {
-    const nodes = useContext(GraphContext).nodes;
+
+export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, ioName, data_type }) => {
+    const {
+        nodes,
+        setPreviewEdge,
+    } = useContext(GraphContext);
+
+    const node_IO_identifier: NodeIOIdentifier = {
+        nodeId,
+        nodeIOName: ioName,
+    }
 
     const handleDragStart = (e: React.DragEvent) => {
         console.log(`Dragging ${type} with nodeId: ${nodeId}`);
 
-        e.dataTransfer.setData("fromId", nodeId);
+        setPreviewEdge?.({
+            fromIO: node_IO_identifier,
+            toIO: undefined,
+        });
+
+        e.dataTransfer.setData("fromIO", JSON.stringify(node_IO_identifier));
     };
 
     const handleDragOver = (e: React.DragEvent) => {
@@ -22,15 +43,34 @@ export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, da
         e.preventDefault();
 
         e.dataTransfer.dropEffect = "move";
-        const fromId = e.dataTransfer.getData("fromId");
-        console.log({ fromId, nodeId });
+        const fromIO = JSON.parse(e.dataTransfer.getData("fromIO")) as NodeIOIdentifier;
+        console.log({ fromIO, node_IO_identifier });
+
+        setPreviewEdge?.({
+            fromIO,
+            toIO: node_IO_identifier,
+        });
     };
 
     const handleDrop = (e: React.DragEvent) => {
-        if (e.dataTransfer && e.dataTransfer.getData("fromId")) { // TODO: add checks to ensure the drop is valid
-            const fromId = e.dataTransfer.getData("fromId");
-            if (fromId && fromId !== nodeId) {
-                onConnectNodes(fromId, nodeId);
+        if (e.dataTransfer && e.dataTransfer.getData("fromIO")) {
+            e.preventDefault();
+            e.stopPropagation();
+            const fromIO = JSON.parse(e.dataTransfer.getData("fromIO")) as NodeIOIdentifier;
+
+            if (!fromIO)
+                return;
+
+            const isValid = isEdgeDropValid(
+                fromIO,
+                node_IO_identifier,
+                nodes,
+            );
+
+            if (isValid.valid) {
+                onConnectNodes(fromIO.nodeId, node_IO_identifier.nodeId);
+            } else {
+                console.info("Drop not valid:", isValid.reason);
             }
         }
     };
