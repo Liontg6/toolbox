@@ -13,8 +13,10 @@ export const GraphContext = createContext<{
      */
     setPreviewEdge?: (edge: { fromIO: NodeIOIdentifier; toIO?: NodeIOIdentifier } | null) => void;
     addEdge?: (fromIO: NodeIOIdentifier, toIO: NodeIOIdentifier) => void;
+    currentlyDraggingNode?: { nodeId: string; startPosition: Position, offset: Position } | null;
 }>({
     nodes: [],
+    currentlyDraggingNode: null,
 });
 
 export function Graph({
@@ -98,7 +100,7 @@ export function Graph({
     }, [edges]);
 
     return (
-        <GraphContext.Provider value={{ nodes, setPreviewEdge, addEdge }}>
+        <GraphContext.Provider value={{ nodes, setPreviewEdge, addEdge, currentlyDraggingNode }}>
             <div
                 ref={graphRef}
                 className={cn("relative rounded bg-background text-foreground p-4 shadow-md overflow-scroll w-full aspect-video", currentlyDraggingNode ? "cursor-grabbing" : undefined)}
@@ -118,6 +120,7 @@ export function Graph({
                             if (!startIOBounds) return null;
                             const endIOBounds = graphRef.current.querySelector(`[data-io-identifier='${JSON.stringify(edge.toIO)}']`)?.getBoundingClientRect();
                             if (!endIOBounds) return null;
+                            // TODO: take scrolling into account
 
                             const startPosition: Position = {
                                 x: startIOBounds.left + startIOBounds.width / 2 - graphBounds.left,

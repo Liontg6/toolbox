@@ -2,6 +2,8 @@ import { NodeState } from "@/lib/graph/NodeState";
 import { MouseEventHandler, useContext } from "react";
 import { NodeIO } from "./NodeIO";
 import { GraphContext } from "./Graph";
+import "@/styles/node.css";
+import { cn } from "@/lib/utils";
 
 export function Node({
     nodeState,
@@ -16,6 +18,7 @@ export function Node({
 }) {
     const {
         addEdge,
+        currentlyDraggingNode,
     } = useContext(GraphContext);
 
     const inputs = nodeState.inputs.map((input, index) => (
@@ -52,11 +55,14 @@ export function Node({
 
     return (
         <div
-            className="absolute rounded bg-primary text-primary-foreground p-2 shadow-md"
+            className={
+                cn("node",
+                    currentlyDraggingNode?.nodeId === nodeState.id ? "node-dragging" : undefined)
+            }
             style={{
                 left: nodeState.position.x,
                 top: nodeState.position.y,
-                transition: "left 0.05s ease-out, top 0.05s ease-out",
+                transition: "left 0.05s ease-out, top 0.05s ease-out, transform 0.1s ease-out",
             }}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
