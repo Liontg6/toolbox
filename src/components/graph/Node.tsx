@@ -1,7 +1,7 @@
-import { NODE_TYPE } from "@/lib/graph/NodeDefinitions";
 import { NodeState } from "@/lib/graph/NodeState";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, useContext } from "react";
 import { NodeIO } from "./NodeIO";
+import { GraphContext } from "./Graph";
 
 export function Node({
     nodeState,
@@ -14,13 +14,20 @@ export function Node({
     onMouseMove: MouseEventHandler<HTMLDivElement>;
     onMouseUp: MouseEventHandler<HTMLDivElement>;
 }) {
+    const {
+        addEdge,
+    } = useContext(GraphContext);
+
     const inputs = nodeState.inputs.map((input, index) => (
         <NodeIO
-            key={index}
+            key={input.name}
             type="input"
             data_type={input.type}
-            onConnectNodes={(fromId, toId) => {
-                console.log(`Connecting ${fromId} to ${toId}`);
+            onConnectNodes={(fromIo, toIo) => {
+                console.log("Connecting", fromIo, "to", toIo);
+                if (addEdge) {
+                    addEdge(fromIo, toIo);
+                }
             }}
             nodeId={nodeState.id}
             ioName={input.name}
@@ -29,11 +36,14 @@ export function Node({
 
     const outputs = nodeState.outputs.map((output, index) => (
         <NodeIO
-            key={index}
+            key={output.name}
             type="output"
             data_type={output.type}
-            onConnectNodes={(fromId, toId) => {
-                console.log(`Connecting ${fromId} to ${toId}`);
+            onConnectNodes={(fromIo, toIo) => {
+                console.log("Connecting", fromIo, "to", toIo);
+                if (addEdge) {
+                    addEdge(fromIo, toIo);
+                }
             }}
             nodeId={nodeState.id}
             ioName={output.name}

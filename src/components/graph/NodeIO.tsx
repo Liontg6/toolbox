@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { GraphContext } from "./Graph";
 import { isEdgeDropValid } from "@/lib/graph/isEdgeDropValid";
 
@@ -10,7 +10,7 @@ export type NodeIOIdentifier = {
 type NodeIOProps = {
     type: "input" | "output";
     data_type: string;
-    onConnectNodes: (fromId: string, toId: string) => void;
+    onConnectNodes: (fromIo: NodeIOIdentifier, toIo: NodeIOIdentifier) => void;
     nodeId: string;
     ioName: string;
 };
@@ -68,12 +68,14 @@ export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, io
             );
 
             if (isValid.valid) {
-                onConnectNodes(fromIO.nodeId, node_IO_identifier.nodeId);
+                onConnectNodes(fromIO, node_IO_identifier);
             } else {
                 console.info("Drop not valid:", isValid.reason);
             }
         }
     };
+
+
 
     if (type === "input") {
         return (
@@ -82,6 +84,7 @@ export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, io
                 onDragStart={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
+                data-io-identifier={JSON.stringify(node_IO_identifier)}
             >
                 Input: {data_type}
             </div>
@@ -94,6 +97,7 @@ export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, io
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
+            data-io-identifier={JSON.stringify(node_IO_identifier)}
         >
             Output: {data_type}
         </div>

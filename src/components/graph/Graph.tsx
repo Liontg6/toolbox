@@ -12,6 +12,7 @@ export const GraphContext = createContext<{
      * Sets the preview edge for the graph, that the user can see while dragging an edge.
      */
     setPreviewEdge?: (edge: { fromIO: NodeIOIdentifier; toIO?: NodeIOIdentifier } | null) => void;
+    addEdge?: (fromIO: NodeIOIdentifier, toIO: NodeIOIdentifier) => void;
 }>({
     nodes: [],
 });
@@ -25,6 +26,14 @@ export function Graph({
         initialNodeStates,
     );
 
+    const [edges, setEdges] = useState<{
+        fromIO: NodeIOIdentifier;
+        toIO?: NodeIOIdentifier;
+    }[]>([]);
+    const addEdge = (fromIO: NodeIOIdentifier, toIO: NodeIOIdentifier) => {
+        setEdges((prevEdges) => [...prevEdges, { fromIO, toIO }]);
+    };
+
     const [currentlyDraggingNode, setCurrentlyDraggingNode] = useState<
         { nodeId: string; startPosition: Position, offset: Position } | null
     >(null);
@@ -33,6 +42,7 @@ export function Graph({
         fromIO: NodeIOIdentifier;
         toIO?: NodeIOIdentifier;
     } | null>(null);
+    const [previewEdgeStartPosition, setPreviewEdgeStartPosition] = useState<Position | null>(null);
 
     const graphRef = useRef<HTMLDivElement>(null);
     const dragRef = useRef<{ current: HTMLDivElement | null }>({ current: null });
@@ -56,6 +66,20 @@ export function Graph({
             };
             setNodePosition(currentlyDraggingNode.nodeId, newPosition);
         }
+
+        if (previewEdge) {
+            const currentPosition = {
+                x: e.clientX - (graphRef.current?.offsetLeft || 0),
+                y: e.clientY - (graphRef.current?.offsetTop || 0),
+            };
+            setPreviewEdge({
+                ...previewEdge,
+                toIO: {
+                    nodeId: previewEdge.fromIO.nodeId,
+                    nodeIOName: previewEdge.fromIO.nodeIOName,
+                },
+            });
+        }
     };
     const onMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -65,15 +89,16 @@ export function Graph({
         }
     };
 
-    console.log("previewEdge changed", previewEdge);
-    
-
     useEffect(() => {
         console.log("currentlyDraggingNode changed", currentlyDraggingNode);
     }, [currentlyDraggingNode]);
 
+    useEffect(() => {
+        console.log("edges changed", edges);
+    }, [edges]);
+
     return (
-        <GraphContext.Provider value={{ nodes, setPreviewEdge }}>
+        <GraphContext.Provider value={{ nodes, setPreviewEdge, addEdge }}>
             <div
                 ref={graphRef}
                 className={cn("relative rounded bg-background text-foreground p-4 shadow-md overflow-scroll w-full aspect-video", currentlyDraggingNode ? "cursor-grabbing" : undefined)}
@@ -81,13 +106,42 @@ export function Graph({
                 onMouseUp={onMouseUp}
             >
                 <svg
-                    className="absolute inset-0 w-full h-full pointer-events-none"
-                    style={{ zIndex: -1 }}
+                    className="absolute inset-0 w-full h-full pointer-events-none z-20"
                 >
-                    // TODO: preview edge rendering
+                    {
+                        edges.map((edge, index) => {
+                            if(graphRef.current === null) return null;
+                            if(!edge.toIO) return null;
+
+                            const graphBounds = graphRef.current.getBoundingClientRect();
+                            const startIOBounds = graphRef.current.querySelector(`[data-io-identifier='${JSON.stringify(edge.fromIO)}']`)?.getBoundingClientRect();
+                            if (!startIOBounds) return null;
+                            const endIOBounds = graphRef.current.querySelector(`[data-io-identifier='${JSON.stringify(edge.toIO)}']`)?.getBoundingClientRect();
+                            if (!endIOBounds) return null;
+
+                            const startPosition: Position = {
+                                x: startIOBounds.left + startIOBounds.width / 2 - graphBounds.left,
+                                y: startIOBounds.top + startIOBounds.height / 2 - graphBounds.top,
+                            };
+
+                            const currentPosition: Position = {
+                                x: endIOBounds.left + endIOBounds.width / 2 - graphBounds.left || startPosition.x,
+                                y: endIOBounds.top + endIOBounds.height / 2 - graphBounds.top || startPosition.y,
+                            };
+
+                            return <PreviewEdge
+                                key={index}
+                                fromId={edge.fromIO.nodeId}
+                                toId={edge.toIO?.nodeId}
+                                startPosition={startPosition}
+                                currentPosition={currentPosition}
+                            />
+                        })
+                    }
                 </svg>
                 {nodes.map((nodeState) => (
                     <Node
+                        key={nodeState.id}
                         nodeState={nodeState}
                         onMouseDown={(e) => {
                             e.preventDefault();
@@ -132,10 +186,9 @@ function PreviewEdge({
             y1={startPosition.y}
             x2={currentPosition.x}
             y2={currentPosition.y}
-            stroke="white"
-            strokeWidth={2}
-            markerEnd="url(#arrowhead)"
-            className="transition-all duration-200 ease-in-out"
+            stroke="blue"
+            strokeWidth="2"
+            strokeLinecap="round"
         />
     );
 
