@@ -13,7 +13,6 @@ export function Node({
     onMouseDown: MouseEventHandler<HTMLDivElement>;
     onMouseMove: MouseEventHandler<HTMLDivElement>;
     onMouseUp: MouseEventHandler<HTMLDivElement>;
-    nodeType: NODE_TYPE;
 }) {
     const inputs = nodeState.inputs.map((input, index) => (
         <NodeIO
@@ -72,11 +71,7 @@ export function Node({
                 <div className="flex flex-col gap-1">
                     <div className="text-xs">Outputs:</div>
                     <div className="flex flex-col gap-1">
-                        {outputs.map((output, index) => (
-                            <div key={index} onMouseDown={onMouseDown}>
-                                {output}
-                            </div>
-                        ))}
+                        {outputs}
                     </div>
                 </div>
             </div>

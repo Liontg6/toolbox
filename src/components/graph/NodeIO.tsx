@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
+import { GraphContext } from "./Graph";
 
 type NodeIOProps = {
     type: "input" | "output";
@@ -8,27 +9,25 @@ type NodeIOProps = {
 };
 
 export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, data_type }) => {
-    const dragData = useRef<string | null>(null);
+    const nodes = useContext(GraphContext).nodes;
 
     const handleDragStart = (e: React.DragEvent) => {
-        if (type === "input") {
-            dragData.current = nodeId;
-            e.dataTransfer.setData("fromId", nodeId);
-        }
+        console.log(`Dragging ${type} with nodeId: ${nodeId}`);
+
+        e.dataTransfer.setData("fromId", nodeId);
     };
 
     const handleDragOver = (e: React.DragEvent) => {
-        if (type === "output") {
-            e.preventDefault();
+        // TODO: add checks to ensure the drop is valid
+        e.preventDefault();
 
-            e.dataTransfer.dropEffect = "move"; // Show move cursor
-            const fromId = e.dataTransfer.getData("fromId");
-            console.log({ fromId, nodeId });
-        }
+        e.dataTransfer.dropEffect = "move";
+        const fromId = e.dataTransfer.getData("fromId");
+        console.log({ fromId, nodeId });
     };
 
     const handleDrop = (e: React.DragEvent) => {
-        if (type === "output") {
+        if (e.dataTransfer && e.dataTransfer.getData("fromId")) { // TODO: add checks to ensure the drop is valid
             const fromId = e.dataTransfer.getData("fromId");
             if (fromId && fromId !== nodeId) {
                 onConnectNodes(fromId, nodeId);
@@ -41,6 +40,8 @@ export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, da
             <div
                 draggable={true}
                 onDragStart={handleDragStart}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
             >
                 Input: {data_type}
             </div>
@@ -49,6 +50,8 @@ export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, da
 
     return (
         <div
+            draggable={true}
+            onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
         >
