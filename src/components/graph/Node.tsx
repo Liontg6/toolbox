@@ -74,7 +74,7 @@ export function Node({
                 cn("node",
                     nodeState.type,
                     currentlyDraggingNode?.nodeId === nodeState.id ? "node-dragging" : undefined,
-                    nodeState.isProcessing ? "node-processing" : undefined
+                    nodeState.isProcessing ? "is-processing" : undefined
                 )
             }
             style={{

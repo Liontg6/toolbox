@@ -22,6 +22,7 @@ export const createNode: (
         ...nodeDefinition,
         id,
         position,
+        isProcessing: false,
         getAllIO: () => [
             ...nodeDefinition.inputs,
             ...nodeDefinition.outputs,

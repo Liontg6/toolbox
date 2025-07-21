@@ -6,7 +6,7 @@ export type NodeState<I extends { [key: string]: any }, O extends { [key: string
         x: number;
         y: number;
     },
-    isProcessing?: boolean;
+    isProcessing: boolean;
     error?: string;
     getAllIO: () => NodeIO[];
 }

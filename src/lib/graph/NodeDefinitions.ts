@@ -1,6 +1,6 @@
 import { NodeDefinition } from "@/lib/graph/NodeDefinition";
 
-export type NODE_TYPE = "input" | "output" | "textToBase64";
+export type NODE_TYPE = "input" | "output" | "textToBase64" | "concatenateStrings" | "waitAndForward";
 
 export const NODE_DEFINITIONS: {[key in NODE_TYPE]: NodeDefinition<any, any>} = {
     input: {
@@ -49,6 +49,46 @@ export const NODE_DEFINITIONS: {[key in NODE_TYPE]: NodeDefinition<any, any>} = 
             }
 
             return { "node.operation.text.textToBase64.outputs.base64": btoa(unescape(encodeURIComponent(parameters[inputkey]))) };
+        },
+        state: {},
+    },
+    concatenateStrings: {
+        type: "operation",
+        name: "node.operation.text.concatenateStrings",
+        inputs: [{
+            name: "node.operation.text.concatenateStrings.inputs.stringA",
+            type: "node.types.text",
+        },{
+            name: "node.operation.text.concatenateStrings.inputs.stringB",
+            type: "node.types.text",
+        }],
+        outputs: [{
+            name: "node.operation.text.concatenateStrings.outputs.concatenated",
+            type: "node.types.text",
+        }],
+        execute: async (parameters: { "node.operation.text.concatenateStrings.inputs.stringA": string, "node.operation.text.concatenateStrings.inputs.stringB": string }) => {
+            const inputA = parameters["node.operation.text.concatenateStrings.inputs.stringA"];
+            const inputB = parameters["node.operation.text.concatenateStrings.inputs.stringB"];
+            return { "node.operation.text.concatenateStrings.outputs.concatenated": inputA + inputB };
+        },
+        state: {},
+    },
+    waitAndForward: {
+        type: "operation",
+        name: "node.operation.waitAndForward",
+        inputs: [{
+            name: "node.operation.waitAndForward.inputs.input",
+            type: "node.types.generic",
+        }],
+        outputs: [{
+            name: "node.operation.waitAndForward.outputs.output",
+            type: "node.types.generic",
+        }],
+        execute: async (parameters: { "node.operation.waitAndForward.inputs.input": any }) => {
+            const input = parameters["node.operation.waitAndForward.inputs.input"];
+            console.info("Waiting for 2 seconds before forwarding:", input);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return { "node.operation.waitAndForward.outputs.output": input };
         },
         state: {},
     },

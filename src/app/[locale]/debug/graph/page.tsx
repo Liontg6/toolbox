@@ -12,7 +12,9 @@ export default function Home() {
             <Graph initialNodeStates={[
                 createNode("input", "1", { x: 50, y: 50 }),
                 createNode("textToBase64", "2", { x: 250, y: 50 }),
-                createNode("output", "3", { x: 450, y: 50 }),
+                createNode("concatenateStrings", "3", { x: 350, y: 50 }),
+                createNode("waitAndForward", "4", { x: 450, y: 50 }),
+                createNode("output", "5", { x: 550, y: 50 }),
             ]} />
         </Section>
     );
