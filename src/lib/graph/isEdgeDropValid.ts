@@ -7,6 +7,7 @@ import { NodeState } from "./NodeState";
 export const isEdgeDropValid: (fromIO: NodeIOIdentifier, toIO: NodeIOIdentifier, nodes: NodeState<any, any>[]) => {
     valid: boolean;
     reason: string;
+    direction?: "input-to-output" | "output-to-input";
 } = (fromIO, toIO, nodes) => {
     if (fromIO.nodeId === toIO.nodeId) {
         return {
@@ -34,10 +35,19 @@ export const isEdgeDropValid: (fromIO: NodeIOIdentifier, toIO: NodeIOIdentifier,
         };
     }
 
-    // TODO: add type checks for the input/output types
+    const isFromIoOutput = fromNode.outputs.some(output => output.name === fromIO.nodeIOName);
+    const isToIoInput = toNode.inputs.some(input => input.name === toIO.nodeIOName);
+
+    if(isFromIoOutput !== isToIoInput) { // only input to outpot or output to input is valid
+        return {
+            valid: false,
+            reason: "graph.nodeIO.connect.invalidDirection",
+        };
+    }
 
     return {
         valid: true,
         reason: "",
+        direction: isFromIoOutput ? "output-to-input" : "input-to-output",
     };
 }

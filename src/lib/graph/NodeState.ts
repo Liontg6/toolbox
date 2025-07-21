@@ -6,5 +6,6 @@ export type NodeState<I, O> = NodeDefinition<I, O> & {
         x: number;
         y: number;
     },
+    isProcessing?: boolean;
     getAllIO: () => NodeIO[];
 }

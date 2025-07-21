@@ -5,7 +5,7 @@ import { createContext, useEffect, useLayoutEffect, useRef, useState } from "rea
 import { Position } from "@/lib/graph/Position.type";
 import { cn } from "@/lib/utils";
 import { NodeIOIdentifier } from "./NodeIO";
-import { set } from "react-hook-form";
+import { Button } from "../ui/button";
 
 export const GraphContext = createContext<{
     nodes: NodeState<any, any>[];
@@ -33,6 +33,15 @@ export function Graph({
         fromIO: NodeIOIdentifier;
         toIO?: NodeIOIdentifier;
     }[]>([]);
+
+    /**
+     * Adds an edge between two node IOs.
+     * 
+     * Edges are always directed from the source node IO to the target node IO.
+     * 
+     * @param fromIO The source node IO.
+     * @param toIO The target node IO.
+     */
     const addEdge = (fromIO: NodeIOIdentifier, toIO: NodeIOIdentifier) => {
         setEdges((prevEdges) => [...prevEdges, { fromIO, toIO }]);
     };
@@ -104,6 +113,9 @@ export function Graph({
 
     return (
         <GraphContext.Provider value={{ nodes, setPreviewEdge, addEdge, currentlyDraggingNode }}>
+            <Button onClick={() => {
+                executeGraph(nodes, edges);
+            }}>Execute</Button>
             <div
                 ref={graphRef}
                 className={cn("relative rounded bg-background text-foreground p-4 shadow-md overflow-scroll w-full aspect-video", currentlyDraggingNode ? "cursor-grabbing" : undefined)}
@@ -165,9 +177,13 @@ function PreviewEdge({
             stroke="blue"
             strokeWidth="2"
             strokeLinecap="round"
+            style={{
+                strokeDasharray: "1000",
+                strokeDashoffset: "1000",
+                animation: "draw-line 0.5s ease forwards"
+            }}
         />
     );
-
 }
 
 
@@ -236,4 +252,43 @@ const useEdgeRenderer = (
     }, [edges, nodes]);
 
     return renderedEdges;
+}
+
+
+
+function executeGraph(nodes: NodeState<any, any>[], edges: { fromIO: NodeIOIdentifier; toIO?: NodeIOIdentifier }[]) {
+    console.log("Executing graph with nodes:", nodes, "and edges:", edges);
+    
+    // STEP A: find all output nodes and build a execution order
+    const outputNodes = nodes.filter(node => node.type === "output");
+    if (outputNodes.length === 0) {
+        console.warn("No output nodes found in the graph.");
+        return;
+    }
+
+    const executionOrder: NodeState<any, any>[] = [];
+    const visitedNodes = new Set<string>();
+
+    const visitNode = (node: NodeState<any, any>) => {
+        if (visitedNodes.has(node.id)) return;
+        visitedNodes.add(node.id);
+
+        // Visit all connected input nodes
+        const inputEdges = edges.filter(edge => edge.toIO?.nodeId === node.id);
+        inputEdges.forEach(edge => {
+            const inputNode = nodes.find(n => n.id === edge.fromIO.nodeId);
+            if (inputNode) {
+                visitNode(inputNode);
+            }
+        });
+
+        executionOrder.push(node);
+    };
+
+    outputNodes.forEach(outputNode => {
+        visitNode(outputNode);
+    });
+
+    // Now we have a complete execution order
+    console.log("Execution order:", executionOrder);
 }

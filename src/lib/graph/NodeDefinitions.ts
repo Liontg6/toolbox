@@ -27,14 +27,14 @@ export const NODE_DEFINITIONS: {[key in NODE_TYPE]: NodeDefinition<any, any>} = 
     },
     textToBase64: {
         type: "operation",
-        name: "node.output.generic",
+        name: "node.operation.text.textToBase64",
         inputs: [{
-            name: "node.input.generic.input",
+            name: "node.input.text",
             type: "node.types.generic",
         }],
         outputs: [{
-            name: "node.output.generic.output",
-            type: "node.types.generic",
+            name: "node.output.text.base64",
+            type: "node.types.text.base64",
         }],
         execute: async (parameters: { input: string }) => {
             return { output: btoa(parameters.input) };

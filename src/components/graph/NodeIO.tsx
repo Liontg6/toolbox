@@ -68,10 +68,15 @@ export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, io
                 nodes,
             );
 
-            if (isValid.valid) {
-                onConnectNodes(fromIO, node_IO_identifier);
-            } else {
+            if (!isValid.valid) {
                 console.info("Drop not valid:", isValid.reason);
+                return;
+            }
+
+            if (isValid.direction === "input-to-output") { // enforce direction
+                onConnectNodes(node_IO_identifier, fromIO);
+            } else if (isValid.direction === "output-to-input") {
+                onConnectNodes(fromIO, node_IO_identifier);
             }
         }
     };

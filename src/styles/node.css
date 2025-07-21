@@ -2,13 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@property --rainbow-rotation-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes rotatingRainbowGradient {
+    0% {
+        --rainbow-rotation-angle: 0deg;
+    }
+
+    100% {
+        --rainbow-rotation-angle: 360deg;
+    }
+
+}
+
 /* Node component styling */
 .node {
     @apply absolute rounded bg-primary text-primary-foreground p-2 shadow-md;
-}
 
-.node-dragging {
-    @apply transform scale-105 shadow-lg;
+    transform-style: preserve-3d; /* used for z-layering of ::before */
+
+    &::before {
+        content: "";
+        @apply absolute top-0 left-0 w-full h-full pointer-events-none opacity-0 hidden;
+        background: conic-gradient(from var(--rainbow-rotation-angle), #458588, #cb231c, #d69920, #679d69);
+        animation: rotatingRainbowGradient 3s linear infinite;
+        filter: blur(8px) saturate(1.5);
+        z-index: -1;
+
+        transition: opacity 0.3s ease-in-out, display 0s 0.3s;
+        transform: translateZ(-1px);
+    }
+
+    &.is-processing {
+        &::before {
+            @apply block opacity-100;
+        }
+    }
+
+    &.node-dragging {
+        @apply transform scale-105 shadow-lg;
+    }
 }
 
 .node-io {
@@ -24,5 +62,13 @@
 
     &.node-types-generic {
         @apply bg-gray-500;
+    }
+}
+
+
+
+@keyframes draw-line {
+    to {
+        stroke-dashoffset: 0;
     }
 }

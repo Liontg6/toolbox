@@ -91,8 +91,7 @@ export function Node({
             }}
             data-node-dragable-handle="true"
         >
-            <div data-node-dragable-handle="true" className="p-1 bg-primary-foreground text-primary rounded">DRAG HERE</div>
-            {nodeState.id} {nodeState.name}
+            <div data-node-dragable-handle="true" className="p-1 bg-primary-foreground text-primary rounded">{nodeState.id} {nodeState.name}</div>
             <div className="flex flex-col gap-1 mt-2">
                 <div className="flex flex-col gap-1">
                     <div className="text-xs">Inputs:</div>
