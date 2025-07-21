@@ -76,7 +76,7 @@ export function Node({
             style={{
                 left: nodeState.position.x,
                 top: nodeState.position.y,
-                transition: "left 0.05s ease-out, top 0.05s ease-out, transform 0.1s ease-out",
+                transition: "transform 0.1s ease-out",
             }}
             onMouseMove={onMouseMove}
             onMouseUp={onMouseUp}
