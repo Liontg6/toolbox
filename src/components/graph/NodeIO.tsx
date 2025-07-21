@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { GraphContext } from "./Graph";
 import { isEdgeDropValid } from "@/lib/graph/isEdgeDropValid";
+import { cn } from "@/lib/utils";
 
 export type NodeIOIdentifier = {
     nodeId: string;
@@ -79,27 +80,38 @@ export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, io
 
     if (type === "input") {
         return (
-            <div
+            <NodeIODot
+                type="input"
+                data_type={data_type}
                 draggable={true}
                 onDragStart={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 data-io-identifier={JSON.stringify(node_IO_identifier)}
-            >
-                Input: {data_type}
-            </div>
+            />
         );
     }
 
     return (
-        <div
+        <NodeIODot
+            type="output"
+            data_type={data_type}
             draggable={true}
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             data-io-identifier={JSON.stringify(node_IO_identifier)}
-        >
-            Output: {data_type}
-        </div>
+        />
     );
 };
+
+const NodeIODot = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & { type: "input" | "output", data_type: string }>((props, ref) => {
+    const { color, style, type, data_type, ...rest } = props;
+    return (
+        <div
+            ref={ref}
+            className={cn("node-io", type, data_type.replaceAll(".", "-"), props.className)}
+            {...rest}
+        />
+    );
+});

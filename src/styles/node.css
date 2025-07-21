@@ -10,3 +10,19 @@
 .node-dragging {
     @apply transform scale-105 shadow-lg;
 }
+
+.node-io {
+    @apply absolute w-2.5 h-2.5 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center;
+
+    &.input {
+        @apply left-0 -translate-x-[5px] border-gray-300;
+    }
+
+    &.output {
+        @apply right-0 translate-x-[5px] border-primary-foreground;
+    }
+
+    &.node-types-generic {
+        @apply bg-gray-500;
+    }
+}

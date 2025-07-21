@@ -4,6 +4,7 @@ import { NodeIO } from "./NodeIO";
 import { GraphContext } from "./Graph";
 import "@/styles/node.css";
 import { cn } from "@/lib/utils";
+import { NodeIOLabel } from "./NodeIOLabel";
 
 export function Node({
     nodeState,
@@ -22,35 +23,48 @@ export function Node({
     } = useContext(GraphContext);
 
     const inputs = nodeState.inputs.map((input, index) => (
-        <NodeIO
+        <NodeIOLabel
             key={input.name}
             type="input"
             data_type={input.type}
-            onConnectNodes={(fromIo, toIo) => {
-                console.log("Connecting", fromIo, "to", toIo);
-                if (addEdge) {
-                    addEdge(fromIo, toIo);
-                }
-            }}
-            nodeId={nodeState.id}
-            ioName={input.name}
-        />
+            nodeIOIdentifier={{ nodeId: nodeState.id, nodeIOName: input.name }}>
+            <NodeIO
+                key={input.name}
+                type="input"
+                data_type={input.type}
+                onConnectNodes={(fromIo, toIo) => {
+                    console.log("Connecting", fromIo, "to", toIo);
+                    if (addEdge) {
+                        addEdge(fromIo, toIo);
+                    }
+                }}
+                nodeId={nodeState.id}
+                ioName={input.name}
+            />
+        </NodeIOLabel>
+
     ));
 
     const outputs = nodeState.outputs.map((output, index) => (
-        <NodeIO
+        <NodeIOLabel
             key={output.name}
             type="output"
             data_type={output.type}
-            onConnectNodes={(fromIo, toIo) => {
-                console.log("Connecting", fromIo, "to", toIo);
-                if (addEdge) {
-                    addEdge(fromIo, toIo);
-                }
-            }}
-            nodeId={nodeState.id}
-            ioName={output.name}
-        />
+            nodeIOIdentifier={{ nodeId: nodeState.id, nodeIOName: output.name }}>
+            <NodeIO
+                key={output.name}
+                type="output"
+                data_type={output.type}
+                onConnectNodes={(fromIo, toIo) => {
+                    console.log("Connecting", fromIo, "to", toIo);
+                    if (addEdge) {
+                        addEdge(fromIo, toIo);
+                    }
+                }}
+                nodeId={nodeState.id}
+                ioName={output.name}
+            />
+        </NodeIOLabel>
     ));
 
     return (
@@ -70,7 +84,7 @@ export function Node({
                 // Only call onMouseDown if data-node-dragable-handle is true
                 const target = e.target as HTMLElement;
                 console.log(target);
-                
+
                 if (target.getAttribute("data-node-dragable-handle") === "true") {
                     onMouseDown(e);
                 }
