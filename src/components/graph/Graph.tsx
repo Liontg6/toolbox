@@ -1,10 +1,11 @@
 import { NodeState } from "@/lib/graph/NodeState";
 
 import { Node } from "@/components/graph/Node";
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Position } from "@/lib/graph/Position.type";
 import { cn } from "@/lib/utils";
 import { NodeIOIdentifier } from "./NodeIO";
+import { set } from "react-hook-form";
 
 export const GraphContext = createContext<{
     nodes: NodeState<any, any>[];
@@ -99,6 +100,8 @@ export function Graph({
         console.log("edges changed", edges);
     }, [edges]);
 
+    const renderedEdges = useEdgeRenderer(nodes, graphRef, edges);
+
     return (
         <GraphContext.Provider value={{ nodes, setPreviewEdge, addEdge, currentlyDraggingNode }}>
             <div
@@ -110,37 +113,7 @@ export function Graph({
                 <svg
                     className="absolute inset-0 w-full h-full pointer-events-none z-20"
                 >
-                    {
-                        edges.map((edge, index) => {
-                            if(graphRef.current === null) return null;
-                            if(!edge.toIO) return null;
-
-                            const graphBounds = graphRef.current.getBoundingClientRect();
-                            const startIOBounds = graphRef.current.querySelector(`[data-io-identifier='${JSON.stringify(edge.fromIO)}']`)?.getBoundingClientRect();
-                            if (!startIOBounds) return null;
-                            const endIOBounds = graphRef.current.querySelector(`[data-io-identifier='${JSON.stringify(edge.toIO)}']`)?.getBoundingClientRect();
-                            if (!endIOBounds) return null;
-                            // TODO: take scrolling into account
-
-                            const startPosition: Position = {
-                                x: startIOBounds.left + startIOBounds.width / 2 - graphBounds.left,
-                                y: startIOBounds.top + startIOBounds.height / 2 - graphBounds.top,
-                            };
-
-                            const currentPosition: Position = {
-                                x: endIOBounds.left + endIOBounds.width / 2 - graphBounds.left || startPosition.x,
-                                y: endIOBounds.top + endIOBounds.height / 2 - graphBounds.top || startPosition.y,
-                            };
-
-                            return <PreviewEdge
-                                key={index}
-                                fromId={edge.fromIO.nodeId}
-                                toId={edge.toIO?.nodeId}
-                                startPosition={startPosition}
-                                currentPosition={currentPosition}
-                            />
-                        })
-                    }
+                    {renderedEdges}
                 </svg>
                 {nodes.map((nodeState) => (
                     <Node
@@ -195,4 +168,72 @@ function PreviewEdge({
         />
     );
 
+}
+
+
+const useEdgeRenderer = (
+    nodes: NodeState<any, any>[],
+    graphRef: React.RefObject<HTMLDivElement>,
+    edges: {
+        fromIO: NodeIOIdentifier;
+        toIO?: NodeIOIdentifier;
+    }[]
+) => {
+    const [renderedEdges, setRenderedEdges] = useState<JSX.Element[]>([]);
+
+    const recaculateEdges = () => {
+        if (graphRef.current === null) {
+            console.warn("Graph ref is null, cannot recalculate edges.");
+            setRenderedEdges([]);
+            return;
+        }
+
+        const graphBounds = graphRef.current.getBoundingClientRect();
+
+        const elements = edges.map((edge, index) => {
+            if (graphRef.current === null) return null;
+            if (!edge.toIO) return null;
+
+            const startIOBounds = graphRef.current.querySelector(`[data-io-identifier='${JSON.stringify(edge.fromIO)}']`)?.getBoundingClientRect();
+            if (!startIOBounds) return null;
+            const endIOBounds = graphRef.current.querySelector(`[data-io-identifier='${JSON.stringify(edge.toIO)}']`)?.getBoundingClientRect();
+            if (!endIOBounds) return null;
+            // TODO: take scrolling into account
+
+            const startPosition: Position = {
+                x: startIOBounds.left + startIOBounds.width / 2 - graphBounds.left,
+                y: startIOBounds.top + startIOBounds.height / 2 - graphBounds.top,
+            };
+
+            const currentPosition: Position = {
+                x: endIOBounds.left + endIOBounds.width / 2 - graphBounds.left || startPosition.x,
+                y: endIOBounds.top + endIOBounds.height / 2 - graphBounds.top || startPosition.y,
+            };
+
+            return (
+                <PreviewEdge
+                    key={index}
+                    fromId={edge.fromIO.nodeId}
+                    toId={edge.toIO?.nodeId}
+                    startPosition={startPosition}
+                    currentPosition={currentPosition}
+                />
+            );
+        });
+
+        setRenderedEdges(elements.filter((el): el is JSX.Element => el !== null));
+    }
+
+    useEffect(() => {
+        graphRef.current?.addEventListener("transitionend", recaculateEdges);
+        return () => {
+            graphRef.current?.removeEventListener("transitionend", recaculateEdges);
+        };
+    }, [graphRef, edges, nodes, setRenderedEdges]);
+
+    useLayoutEffect(() => {
+        recaculateEdges();
+    }, [edges, nodes]);
+
+    return renderedEdges;
 }
