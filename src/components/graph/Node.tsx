@@ -5,6 +5,7 @@ import { GraphContext } from "./Graph";
 import "@/styles/node.css";
 import { cn } from "@/lib/utils";
 import { NodeIOLabel } from "./NodeIOLabel";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 export function Node({
     nodeState,
@@ -71,7 +72,10 @@ export function Node({
         <div
             className={
                 cn("node",
-                    currentlyDraggingNode?.nodeId === nodeState.id ? "node-dragging" : undefined)
+                    nodeState.type,
+                    currentlyDraggingNode?.nodeId === nodeState.id ? "node-dragging" : undefined,
+                    nodeState.isProcessing ? "node-processing" : undefined
+                )
             }
             style={{
                 left: nodeState.position.x,
@@ -83,7 +87,6 @@ export function Node({
             onMouseDown={e => {
                 // Only call onMouseDown if data-node-dragable-handle is true
                 const target = e.target as HTMLElement;
-                console.log(target);
 
                 if (target.getAttribute("data-node-dragable-handle") === "true") {
                     onMouseDown(e);
@@ -92,6 +95,14 @@ export function Node({
             data-node-dragable-handle="true"
         >
             <div data-node-dragable-handle="true" className="p-1 bg-primary-foreground text-primary rounded">{nodeState.id} {nodeState.name}</div>
+            {
+                nodeState.error && <Alert variant={"destructive"} className="mt-2">
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                        {nodeState.error}
+                    </AlertDescription>
+                </Alert>
+            }
             <div className="flex flex-col gap-1 mt-2">
                 <div className="flex flex-col gap-1">
                     <div className="text-xs">Inputs:</div>

@@ -3,7 +3,7 @@ export type NodeIO = {
     type: string;
 };
 
-export type NodeDefinition<I, O> = {
+export type NodeDefinition<I extends { [key: string]: any }, O extends { [key: string]: any }> = {
     type: "input" | "output" | "operation";
     name: string;
     /**
@@ -18,6 +18,9 @@ export type NodeDefinition<I, O> = {
      * @param parameters
      * @returns
      */
-    execute: (parameters: I) => Promise<O>;
+    /**
+     * Returns an object with the output names as keys and their values.
+     */
+    execute: (parameters: I) => Promise<{ [outputKey in keyof O]: O[outputKey] }>;
     state: O;
 };

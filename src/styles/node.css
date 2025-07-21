@@ -24,6 +24,10 @@
 .node {
     @apply absolute rounded bg-primary text-primary-foreground p-2 shadow-md;
 
+    &.operation {
+        @apply border border-primary bg-background text-foreground; /** TODO: Improve color scheme */
+    }
+
     transform-style: preserve-3d; /* used for z-layering of ::before */
 
     &::before {
