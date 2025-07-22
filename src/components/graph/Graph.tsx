@@ -118,12 +118,12 @@ export function Graph({
             }}>Execute</Button>
             <div
                 ref={graphRef}
-                className={cn("relative rounded bg-background text-foreground p-4 shadow-md overflow-scroll w-full aspect-video", currentlyDraggingNode ? "cursor-grabbing" : undefined)}
+                className={cn("relative rounded bg-background text-foreground p-0 shadow-md overflow-scroll w-full aspect-video", currentlyDraggingNode ? "cursor-grabbing" : undefined)}
                 onMouseMove={onMouseMove}
                 onMouseUp={onMouseUp}
             >
                 <svg
-                    className="absolute inset-0 w-full h-full pointer-events-none z-20"
+                    className="sticky inset-0 w-full h-full pointer-events-none z-20"
                 >
                     {renderedEdges}
                 </svg>
@@ -177,6 +177,7 @@ function PreviewEdge({
             stroke="blue"
             strokeWidth="2"
             strokeLinecap="round"
+            shapeRendering="geometricPrecision" // TODO: add option to disable geometricPrecision
             style={{
                 strokeDasharray: "10000",
                 strokeDashoffset: "10000",
@@ -217,13 +218,13 @@ const useEdgeRenderer = (
             // TODO: take scrolling into account
 
             const startPosition: Position = {
-                x: startIOBounds.left + startIOBounds.width / 2 - graphBounds.left + graphRef.current.scrollLeft,
-                y: startIOBounds.top + startIOBounds.height / 2 - graphBounds.top + graphRef.current.scrollTop,
+                x: startIOBounds.left + startIOBounds.width / 2 - graphBounds.left,
+                y: startIOBounds.top + startIOBounds.height / 2 - graphBounds.top,
             };
 
             const currentPosition: Position = {
-                x: endIOBounds.left + endIOBounds.width / 2 - graphBounds.left + graphRef.current.scrollLeft || startPosition.x,
-                y: endIOBounds.top + endIOBounds.height / 2 - graphBounds.top + graphRef.current.scrollTop || startPosition.y,
+                x: endIOBounds.left + endIOBounds.width / 2 - graphBounds.left || startPosition.x,
+                y: endIOBounds.top + endIOBounds.height / 2 - graphBounds.top || startPosition.y,
             };
 
             return (
@@ -242,8 +243,10 @@ const useEdgeRenderer = (
 
     useEffect(() => {
         graphRef.current?.addEventListener("transitionend", recaculateEdges);
+        graphRef.current?.addEventListener("scroll", recaculateEdges);
         return () => {
             graphRef.current?.removeEventListener("transitionend", recaculateEdges);
+            graphRef.current?.removeEventListener("scroll", recaculateEdges);
         };
     }, [graphRef, edges, nodes, setRenderedEdges]);
 
