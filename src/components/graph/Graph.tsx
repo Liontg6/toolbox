@@ -178,8 +178,8 @@ function PreviewEdge({
             strokeWidth="2"
             strokeLinecap="round"
             style={{
-                strokeDasharray: "1000",
-                strokeDashoffset: "1000",
+                strokeDasharray: "10000",
+                strokeDashoffset: "10000",
                 animation: "draw-line 0.5s ease forwards"
             }}
         />
