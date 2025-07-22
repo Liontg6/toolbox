@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { CopyToClipboard } from "@/components/ui/copyToClipboard";
 import { Input } from "@/components/ui/input";
-import { IpAddressInput } from "@/components/ui/ipAddressInput";
+import { Ipv4AddressInput } from "@/components/ui/ipv4AddressInput";
 import { Label } from "@/components/ui/label";
 import { Section } from "@/components/ui/Section";
 import { Separator } from "@/components/ui/separator";
@@ -10,13 +10,12 @@ import ipv4CalculateSubnetBorders from "@/lib/network/ipv4CalculateSubnetBorders
 import ipv4SubnetMaskFromCidr from "@/lib/network/ipv4SubnetMaskFromCidr";
 import ipv4ToNumber from "@/lib/network/ipv4ToNumber";
 import numberToIpv4 from "@/lib/network/numberToIpv4";
-import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from "react";
 
 
-export default function IPCalculator () {
-    const t = useTranslations("tools.network.ipcalc");
+export default function IPCalculator4 () {
+    const t = useTranslations("tools.network.ipcalc4");
 
     const [ip, setIp] = useState<string>("192.168.15.65");
     const [prefixLength, setPrefixLength] = useState<number>(24);
@@ -57,7 +56,7 @@ export default function IPCalculator () {
                 <span className="flex flex-row items-center gap-2 w-full">
                     <div className="flex flex-col">
                         <Label className="w-full pl-1 pr-1 pb-2" htmlFor="input">{t("inputAddress")}</Label>
-                        <IpAddressInput valueIp={ip} valueCidr={prefixLength} onChange={(ip, cidr) => {
+                        <Ipv4AddressInput valueIp={ip} valueCidr={prefixLength} onChange={(ip, cidr) => {
                             setIp(ip);
                             setPrefixLength(+cidr);
                         }} />

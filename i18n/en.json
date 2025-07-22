@@ -91,8 +91,12 @@
       },
       "network": {
         "title": "Networking",
-        "ipcalc": {
+        "ipcalc4": {
           "title": "IPv4 Calculator",
+          "description": "Description"
+        },
+        "ipcalc6": {
+          "title": "IPv6 Calculator",
           "description": "Description"
         }
       }
@@ -143,7 +147,7 @@
       }
     },
     "network": {
-      "ipcalc": {
+      "ipcalc4": {
         "title": "IPv4 Calculator",
         "description": "Description",
         "inputAddress": "Network / CIDR",
@@ -153,6 +157,15 @@
         "resultFirstHost": "First Host",
         "resultLastHost": "Last Host",
         "resultBroadcast": "Broadcast",
+        "resultAmountHost": "Number of hosts"
+      },
+      "ipcalc6": {
+        "title": "IPv6 Calculator",
+        "description": "Description",
+        "inputAddress": "Network / CIDR",
+        "resultNetwork": "Network",
+        "resultFirstHost": "First Host",
+        "resultLastHost": "Last Host",
         "resultAmountHost": "Number of hosts"
       }
     }

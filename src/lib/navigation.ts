@@ -160,8 +160,14 @@ export const menuData: Array<NavigationGroupTranslationKey & DisplayInMenuField 
       displayInMenu: true,
       items: [
         {
-          translationKey: "ipcalc",
-          href: "/network/ip-calculator",
+          translationKey: "ipcalc4",
+          href: "/network/ip-calculator-4",
+          displayInMenu: true,
+          icon: FileTextIcon,
+        },
+        {
+          translationKey: "ipcalc6",
+          href: "/network/ip-calculator-6",
           displayInMenu: true,
           icon: FileTextIcon,
         },
