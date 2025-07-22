@@ -217,13 +217,13 @@ const useEdgeRenderer = (
             // TODO: take scrolling into account
 
             const startPosition: Position = {
-                x: startIOBounds.left + startIOBounds.width / 2 - graphBounds.left,
-                y: startIOBounds.top + startIOBounds.height / 2 - graphBounds.top,
+                x: startIOBounds.left + startIOBounds.width / 2 - graphBounds.left + graphRef.current.scrollLeft,
+                y: startIOBounds.top + startIOBounds.height / 2 - graphBounds.top + graphRef.current.scrollTop,
             };
 
             const currentPosition: Position = {
-                x: endIOBounds.left + endIOBounds.width / 2 - graphBounds.left || startPosition.x,
-                y: endIOBounds.top + endIOBounds.height / 2 - graphBounds.top || startPosition.y,
+                x: endIOBounds.left + endIOBounds.width / 2 - graphBounds.left + graphRef.current.scrollLeft || startPosition.x,
+                y: endIOBounds.top + endIOBounds.height / 2 - graphBounds.top + graphRef.current.scrollTop || startPosition.y,
             };
 
             return (
