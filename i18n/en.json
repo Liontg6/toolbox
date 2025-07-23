@@ -163,6 +163,7 @@
         "title": "IPv6 Calculator",
         "description": "Description",
         "inputAddress": "Network / CIDR",
+        "compress": "Compress addresses",
         "resultNetwork": "Network",
         "resultFirstHost": "First Host",
         "resultLastHost": "Last Host",

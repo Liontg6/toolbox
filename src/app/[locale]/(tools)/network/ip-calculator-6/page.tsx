@@ -1,4 +1,5 @@
 "use client"
+import { Checkbox } from "@/components/ui/checkbox";
 import { CopyToClipboard } from "@/components/ui/copyToClipboard";
 import { Input } from "@/components/ui/input";
 import { Ipv6AddressInput } from "@/components/ui/ipv6AddressInput";
@@ -6,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Section } from "@/components/ui/Section";
 import { Separator } from "@/components/ui/separator";
 import ipv6CalculateSubnetBorders from "@/lib/network/ipv6CalculateSubnetBorders";
+import ipv6CidrToMask from "@/lib/network/ipv6CidrToMask";
 import ipv6SubnetMaskFromCidr from "@/lib/network/ipv6SubnetMaskFromCidr";
 import ipv6ToUintArray from "@/lib/network/ipv6ToUintArray";
 import { useTranslations } from 'next-intl';
@@ -32,22 +34,24 @@ export default function IPCalculator6 () {
     const [numberHosts, setNumberHosts] = useState<bigint>(0n);
     const [firstHost, setFirstHost] = useState<string>("");
     const [lastHost, setLastHost] = useState<string>("");
+    const [compress, setCompress] = useState<boolean>(false);
 
     const [error, setError] = useState<string>(""); // TODO: add error handling
 
     useEffect(() => {
         try {
             const _ipIntArray = ipv6ToUintArray(ip);
+            const _ipMask = ipv6CidrToMask(prefixLength);
 
-            setNetworkAddress(ipv6SubnetMaskFromCidr(ip, prefixLength));
-            setNumberHosts(getNumberHosts(prefixLength));
-            const subnetBorders = ipv6CalculateSubnetBorders(_ipIntArray, prefixLength);
+            setNetworkAddress(ipv6SubnetMaskFromCidr(_ipIntArray, _ipMask, compress));
+            const subnetBorders = ipv6CalculateSubnetBorders(_ipIntArray, _ipMask, compress);
             setFirstHost(subnetBorders.firstHost);
             setLastHost(subnetBorders.lastHost);
+            setNumberHosts(getNumberHosts(prefixLength));
         } catch (e) {
             setError(e as string);
         }
-    }, [ip, prefixLength]);
+    }, [ip, prefixLength, compress]);
 
     return <div className="flex flex-col gap-4 lg:gap-8 pt-2">
         <Section variant={"primary"}>
@@ -64,6 +68,21 @@ export default function IPCalculator6 () {
 
                 </span>
             </span>
+
+            <div className="flex flex-row flex-wrap gap-2 lg:gap-4 my-2">
+                <div className="flex items-center space-x-2">
+                    <Checkbox
+                        id="compress"
+                        checked={compress}
+                        onCheckedChange={(value) => setCompress(value === true)} />
+                    <label
+                        htmlFor="compress"
+                        className="peer-disabled:cursor-not-allowed hover:cursor-pointer"
+                    >
+                        {t("compress")}
+                    </label>
+                </div>
+            </div>
 
             <Separator orientation="horizontal" className="my-4 md:my-8" />
 
