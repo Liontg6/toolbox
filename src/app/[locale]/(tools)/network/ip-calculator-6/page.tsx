@@ -8,7 +8,7 @@ import { Section } from "@/components/ui/Section";
 import { Separator } from "@/components/ui/separator";
 import ipv6CalculateSubnetBorders from "@/lib/network/ipv6CalculateSubnetBorders";
 import ipv6CidrToMask from "@/lib/network/ipv6CidrToMask";
-import ipv6SubnetMaskFromCidr from "@/lib/network/ipv6SubnetMaskFromCidr";
+import ipv6NetworkFromMask from "@/lib/network/ipv6NetworkFromMask";
 import ipv6ToUintArray from "@/lib/network/ipv6ToUintArray";
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from "react";
@@ -43,7 +43,7 @@ export default function IPCalculator6 () {
             const _ipIntArray = ipv6ToUintArray(ip);
             const _ipMask = ipv6CidrToMask(prefixLength);
 
-            setNetworkAddress(ipv6SubnetMaskFromCidr(_ipIntArray, _ipMask, compress));
+            setNetworkAddress(ipv6NetworkFromMask(_ipIntArray, _ipMask, compress) + `/${prefixLength}`);
             const subnetBorders = ipv6CalculateSubnetBorders(_ipIntArray, _ipMask, compress);
             setFirstHost(subnetBorders.firstHost);
             setLastHost(subnetBorders.lastHost);

@@ -1,5 +1,5 @@
 /**
- * Converts an IPv6 address as string to a Uint8Array
+ * Converts an IPv6 address as string to an Uint8Array
  */
 export default function ipv6ToUintArray(ip: string): Uint8Array {
   const padded = ip.replace('::', ':' + '0:'.repeat(8 - ip.split(':').filter(x => x).length)).replace(/(^:|:$)/g, '');
