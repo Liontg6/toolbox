@@ -34,6 +34,44 @@ export function Graph({
         toIO?: NodeIOIdentifier;
     }[]>([]);
 
+    const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null);
+    const [scrollStart, setScrollStart] = useState<{ x: number; y: number } | null>(null);
+
+    const startDragging = (e: React.MouseEvent<HTMLDivElement>) => {
+        setDragStart({ x: e.clientX, y: e.clientY });
+        setScrollStart({
+            x: graphRef.current?.scrollLeft || 0,
+            y: graphRef.current?.scrollTop || 0
+        });
+    };
+
+    const doDragging = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (dragStart && scrollStart) {
+            const currentX = e.clientX;
+            const currentY = e.clientY;
+            const deltaX = currentX - dragStart.x;
+            const deltaY = currentY - dragStart.y;
+            if (graphRef.current) {
+                graphRef.current.scrollLeft = scrollStart.x - deltaX;
+                graphRef.current.scrollTop = scrollStart.y - deltaY;
+            }
+        }
+    };
+
+    const stopDragging = () => {
+        setDragStart(null);
+        setScrollStart(null);
+    };
+
+    const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.target === graphRef.current) {
+            startDragging(e);
+        }
+    };
+
+
     /**
      * Adds an edge between two node IOs.
      * 
@@ -71,6 +109,8 @@ export function Graph({
     };
 
     const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        doDragging(e);
+
         if (currentlyDraggingNode) {
             const newPosition = {
                 x: e.clientX - (graphRef.current?.offsetLeft || 0) + currentlyDraggingNode.offset.x,
@@ -96,6 +136,9 @@ export function Graph({
     const onMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
         e.stopPropagation();
+
+        stopDragging();
+
         if (currentlyDraggingNode) {
             setCurrentlyDraggingNode(null);
         }
@@ -121,6 +164,8 @@ export function Graph({
                 className={cn("relative rounded bg-background text-foreground p-0 shadow-md overflow-scroll w-full aspect-video", currentlyDraggingNode ? "cursor-grabbing" : undefined)}
                 onMouseMove={onMouseMove}
                 onMouseUp={onMouseUp}
+                onMouseDown={onMouseDown}
+                onMouseLeave={stopDragging}
             >
                 <svg
                     className="sticky inset-0 w-full h-full pointer-events-none z-20"
@@ -261,8 +306,10 @@ const useEdgeRenderer = (
 
 async function executeGraph(
     nodes: NodeState<any, any>[],
-    edges: { fromIO: NodeIOIdentifier;
-    toIO?: NodeIOIdentifier }[],
+    edges: {
+        fromIO: NodeIOIdentifier;
+        toIO?: NodeIOIdentifier
+    }[],
     setNodeState: (nodeId: string, newState: Partial<NodeState<any, any>>) => void) {
     console.log("Executing graph with nodes:", nodes, "and edges:", edges);
 
@@ -350,7 +397,7 @@ async function executeGraph(
 
         await node.execute(parameters).then((result) => {
             console.info(`Node ${node.id} executed successfully with result:`, result, "and parameters:", parameters);
-            
+
             setNodeState(node.id, { state: { ...node.state, ...result } });
             console.info(`Node ${node.id} state updated to:`, { ...node.state, ...result });
         }).catch((error) => {
