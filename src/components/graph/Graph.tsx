@@ -160,7 +160,9 @@ export function Graph({
             }}>Execute</Button>
             <div
                 ref={graphRef}
-                className={cn("relative rounded bg-background text-foreground p-0 shadow-md overflow-scroll w-full aspect-video", currentlyDraggingNode ? "cursor-grabbing" : undefined)}
+                className={cn("relative rounded bg-background text-foreground p-0 shadow-md overflow-scroll w-full aspect-video",
+                    currentlyDraggingNode ? "cursor-grabbing" : undefined,
+                    dragStart != null ? "cursor-grab" : undefined)}
                 onMouseMove={onMouseMove}
                 onMouseUp={onMouseUp}
                 onMouseDown={onMouseDown}
