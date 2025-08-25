@@ -64,9 +64,9 @@ export function Graph({
     };
 
     const onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
         if (e.target === graphRef.current) {
+            e.preventDefault();
+            e.stopPropagation();
             startDragging(e);
         }
     };
@@ -92,7 +92,6 @@ export function Graph({
         fromIO: NodeIOIdentifier;
         toIO?: NodeIOIdentifier;
     } | null>(null);
-    const [previewEdgeStartPosition, setPreviewEdgeStartPosition] = useState<Position | null>(null);
 
     const graphRef = useRef<HTMLDivElement>(null);
     const dragRef = useRef<{ current: HTMLDivElement | null }>({ current: null });
