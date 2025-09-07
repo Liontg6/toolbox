@@ -214,22 +214,28 @@ function PreviewEdge({
     startPosition: Position;
     currentPosition: Position;
 }) {
+    const geomDistance = Math.sqrt(
+        Math.pow(currentPosition.x - startPosition.x, 2) +
+        Math.pow(currentPosition.y - startPosition.y, 2)
+    );
     return (
-        <line
-            x1={startPosition.x}
-            y1={startPosition.y}
-            x2={currentPosition.x}
-            y2={currentPosition.y}
+        <path
+            d={`
+                M ${startPosition.x} ${startPosition.y}
+                C ${startPosition.x + Math.min(100, geomDistance)} ${startPosition.y},
+                  ${currentPosition.x - Math.min(100, geomDistance)} ${currentPosition.y},
+                  ${currentPosition.x} ${currentPosition.y}
+            `}
             stroke="blue"
             strokeWidth="2"
+            fill="none"
             strokeLinecap="round"
             shapeRendering="geometricPrecision" // TODO: add option to disable geometricPrecision
             style={{
                 strokeDasharray: "10000",
                 strokeDashoffset: "10000",
                 animation: "draw-line 0.5s ease forwards"
-            }}
-        />
+            }} />
     );
 }
 
