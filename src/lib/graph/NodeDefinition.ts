@@ -1,5 +1,17 @@
 export type NodeIO = {
+    /**
+     * Technical name of the IO
+     * 
+     * This identifies the IO and must be unique within the node.
+     */
     name: string;
+    /**
+     * Translation key for the IO name
+     */
+    translationKey: string;
+    /**
+     * Data type of the IO, e.g. "types.text", "types.number", "types.image.png", etc.
+     */
     type: string;
 };
 

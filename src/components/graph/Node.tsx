@@ -1,11 +1,12 @@
 import { NodeState } from "@/lib/graph/NodeState";
-import { MouseEventHandler, useContext } from "react";
+import { MouseEventHandler, useContext, useTransition } from "react";
 import { NodeIO } from "./NodeIO";
 import { GraphContext } from "./Graph";
 import "@/styles/node.css";
 import { cn } from "@/lib/utils";
 import { NodeIOLabel } from "./NodeIOLabel";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { useTranslations } from "next-intl";
 
 export function Node({
     nodeState,
@@ -23,11 +24,14 @@ export function Node({
         currentlyDraggingNode,
     } = useContext(GraphContext);
 
+    const t = useTranslations("graph");
+
     const inputs = nodeState.inputs.map((input, index) => (
         <NodeIOLabel
             key={input.name}
             type="input"
             data_type={input.type}
+            ioTranslationKey={input.translationKey}
             nodeIOIdentifier={{ nodeId: nodeState.id, nodeIOName: input.name }}>
             <NodeIO
                 key={input.name}
@@ -51,6 +55,7 @@ export function Node({
             key={output.name}
             type="output"
             data_type={output.type}
+            ioTranslationKey={output.translationKey}
             nodeIOIdentifier={{ nodeId: nodeState.id, nodeIOName: output.name }}>
             <NodeIO
                 key={output.name}
@@ -94,7 +99,7 @@ export function Node({
             }}
             data-node-dragable-handle="true"
         >
-            <div data-node-dragable-handle="true" className="p-1 bg-primary-foreground text-primary rounded">{nodeState.id} {nodeState.name}</div>
+            <div data-node-dragable-handle="true" className="p-1 bg-primary-foreground text-primary rounded">{nodeState.id} {t("nodes." + nodeState.name + ".name")}</div>
             {
                 nodeState.error && <Alert variant={"destructive"} className="mt-2">
                     <AlertTitle>Error</AlertTitle>
