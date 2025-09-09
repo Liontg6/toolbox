@@ -82,6 +82,23 @@
 }
 
 
+.node-io-label {
+    @apply flex items-center;
+
+    &.input {
+        @apply pl-1 pr-4;
+    }
+
+    &.output {
+        @apply pr-1 pl-4;
+
+        .node-io-label-text {
+            @apply w-full text-right;
+        }
+    }
+}
+
+
 
 @keyframes draw-line {
     to {

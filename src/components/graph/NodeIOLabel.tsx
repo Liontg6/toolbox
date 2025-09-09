@@ -24,9 +24,9 @@ export const NodeIOLabel: React.FC<NodeIOLabelProps> = ({ children, type, data_t
 
     return (
         <div
-            className={cn("flex items-center", type === "input" ? "pl-2" : "pr-2")}
+            className={cn("node-io-label", type)}
         >
-            {t(ioTranslationKey)} {children}
+            <span className="node-io-label-text">{t(ioTranslationKey)}</span> {children}
         </div>
     );
 };

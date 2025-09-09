@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { NodeIOLabel } from "./NodeIOLabel";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { useTranslations } from "next-intl";
+import { Separator } from "@radix-ui/react-separator";
 
 export function Node({
     nodeState,
@@ -99,7 +100,7 @@ export function Node({
             }}
             data-node-dragable-handle="true"
         >
-            <div data-node-dragable-handle="true" className="p-1 bg-primary-foreground text-primary rounded">{nodeState.id} {t("nodes." + nodeState.name + ".name")}</div>
+            <div data-node-dragable-handle="true" className="p-1 bg-primary-foreground text-primary rounded">{t("nodes." + nodeState.name + ".name")}</div>
             {
                 nodeState.error && <Alert variant={"destructive"} className="mt-2">
                     <AlertTitle>Error</AlertTitle>
@@ -110,13 +111,14 @@ export function Node({
             }
             <div className="flex flex-col gap-1 mt-2">
                 <div className="flex flex-col gap-1">
-                    <div className="text-xs">Inputs:</div>
                     <div className="flex flex-col gap-1">
                         {inputs}
                     </div>
                 </div>
+
+                <Separator className="my-px h-px bg-primary-foreground" orientation="horizontal" />
+
                 <div className="flex flex-col gap-1">
-                    <div className="text-xs">Outputs:</div>
                     <div className="flex flex-col gap-1">
                         {outputs}
                     </div>
