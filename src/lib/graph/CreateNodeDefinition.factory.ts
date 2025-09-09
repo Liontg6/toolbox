@@ -15,8 +15,8 @@ export function createNodeDefinition<
     config: {
         type: string;
         name: string;
-        inputs: { name: InputKeys[number]; type: string }[];
-        outputs: { name: OutputKeys[number]; type: string }[];
+        inputs: { name: InputKeys[number]; translationKey: string; type: string }[];
+        outputs: { name: OutputKeys[number]; translationKey: string; type: string }[];
         execute: (parameters: { [K in InputKeys[number]]: any }) => Promise<{ [K in OutputKeys[number]]: any }>;
     }
 ): NodeDefinition<{ [K in InputKeys[number]]: any }, { [K in OutputKeys[number]]: any }> {
