@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { createContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { NodeIOIdentifier } from "./NodeIO";
+import { areTypesCompatible } from "@/lib/graph/areTypesCompatible";
+import { cva } from "class-variance-authority";
 
 export const GraphContext = createContext<{
     nodes: NodeState<any, any>[];
@@ -235,16 +237,22 @@ function Edge({
     toId,
     startPosition,
     currentPosition,
+    variant,
 }: {
     fromId: string;
     toId?: string;
     startPosition: Position;
     currentPosition: Position;
+    variant?: "default" | "typewarning" | "typeerror";
 }) {
     const geomDistance = Math.sqrt(
         Math.pow(currentPosition.x - startPosition.x, 2) +
         Math.pow(currentPosition.y - startPosition.y, 2)
     );
+
+    const stroke = variant === "typeerror"
+        ? "var(--edge-type-error-foreground)" : (variant === "typewarning"
+            ? "var(--edge-type-warning-foreground)" : "var(--edge-foreground)");
     return (
         <path
             d={`
@@ -253,7 +261,7 @@ function Edge({
                   ${currentPosition.x - Math.min(100, geomDistance)} ${currentPosition.y},
                   ${currentPosition.x} ${currentPosition.y}
             `}
-            stroke="var(--edge-color)"
+            stroke={stroke}
             strokeWidth="2"
             fill="none"
             strokeLinecap="round"
@@ -306,6 +314,13 @@ const useEdgeRenderer = (
                 y: endIOBounds.top + endIOBounds.height / 2 - graphBounds.top || startPosition.y,
             };
 
+            const compatibility = areTypesCompatible(
+                nodes.find(n => n.id === edge.fromIO.nodeId)?.getAllIO().find(io => io.name === edge.fromIO.nodeIOName)?.type || "any",
+                nodes.find(n => n.id === edge.toIO?.nodeId)?.getAllIO().find(io => io.name === edge.toIO?.nodeIOName)?.type || "any",
+            );
+
+            const edgeVariant = compatibility === "compatible" ? "default" : (compatibility === "warning" ? "typewarning" : "typeerror");
+
             return (
                 <Edge
                     key={index}
@@ -313,6 +328,7 @@ const useEdgeRenderer = (
                     toId={edge.toIO?.nodeId}
                     startPosition={startPosition}
                     currentPosition={currentPosition}
+                    variant={edgeVariant}
                 />
             );
         });
@@ -335,6 +351,7 @@ const useEdgeRenderer = (
 
     return renderedEdges;
 }
+
 
 
 

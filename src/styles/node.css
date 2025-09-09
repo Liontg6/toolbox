@@ -11,11 +11,15 @@
 
 @layer base {
   :root {
-    --edge-color: #222222AA;
+    --edge-foreground: #222222AA;
+    --edge-type-warning-foreground: #d69920AA;
+    --edge-type-error-foreground: #cb231cAA;
   }
 
   .dark {
-    --edge-color: #ffe9c4AA;
+    --edge-foreground: #ffe9c4AA;
+    --edge-type-warning-foreground: #ffe600aa;
+    --edge-type-error-foreground: #ff0800aa;
   }
 }
 

@@ -3,6 +3,7 @@ import { createNodeDefinition } from "./CreateNodeDefinition.factory";
 
 export type NODE_TYPE =
     | "input"
+    | "inputNumeric"
     | "output"
     | "textToBase64"
     | "concatenateStrings"
@@ -11,26 +12,39 @@ export type NODE_TYPE =
 export const NODE_DEFINITIONS: {
     [key in NODE_TYPE]: NodeDefinition<any, any>;
 } = {
-    input: createNodeDefinition<[], ["input.generic.input"]>({
+    input: createNodeDefinition<[], ["input.any.input"]>({
         type: "input",
-        name: "input.generic",
+        name: "input.any",
         inputs: [],
         outputs: [{
-            name: "input.generic.input",
-            translationKey: "types.generic",
-            type: "types.generic",
+            name: "input.any.input",
+            translationKey: "types.any",
+            type: "any",
         }],
         execute: async () => {
-            return { "input.generic.input": "TODO: INPUT THIS VALUE USING UI" };
+            return { "input.any.input": "TODO: INPUT THIS VALUE USING UI" };
         },
     }),
-    output: createNodeDefinition<["output.generic.output"], []>({
+    inputNumeric: createNodeDefinition<[], ["input.numeric.input"]>({
+        type: "input",
+        name: "input.numeric",
+        inputs: [],
+        outputs: [{
+            name: "input.numeric.input",
+            translationKey: "types.numeric",
+            type: "numeric",
+        }],
+        execute: async () => {
+            return { "input.numeric.input": 12.3456789 };
+        },
+    }),
+    output: createNodeDefinition<["output.any.output"], []>({
         type: "output",
-        name: "output.generic",
+        name: "output.any",
         inputs: [{
-            name: "output.generic.output",
-            translationKey: "types.generic",
-            type: "types.generic",
+            name: "output.any.output",
+            translationKey: "types.any",
+            type: "any",
         }],
         outputs: [],
         execute: async (stateOfInputs) => {
@@ -47,12 +61,12 @@ export const NODE_DEFINITIONS: {
         inputs: [{
             name: "operation.text.textToBase64.inputs.text",
             translationKey: "types.text.any",
-            type: "types.text.text",
+            type: "text.any",
         }],
         outputs: [{
             name: "operation.text.textToBase64.outputs.base64",
             translationKey: "types.text.base64",
-            type: "types.text.base64",
+            type: "text.base64",
         }],
         execute: async (
             parameters: { "operation.text.textToBase64.inputs.text": string },
@@ -84,16 +98,16 @@ export const NODE_DEFINITIONS: {
         inputs: [{
             name: "operation.text.concatenateStrings.inputs.stringA",
             translationKey: "types.text.any",
-            type: "types.text",
+            type: "text.any",
         }, {
             name: "operation.text.concatenateStrings.inputs.stringB",
             translationKey: "types.text.any",
-            type: "types.text",
+            type: "text.any",
         }],
         outputs: [{
             name: "operation.text.concatenateStrings.outputs.concatenated",
             translationKey: "types.text.any",
-            type: "types.text",
+            type: "text.any",
         }],
         execute: async (
             parameters: {
@@ -119,13 +133,13 @@ export const NODE_DEFINITIONS: {
         name: "operation.waitAndForward",
         inputs: [{
             name: "operation.waitAndForward.inputs.input",
-            translationKey: "types.generic",
-            type: "types.generic",
+            translationKey: "types.any",
+            type: "any",
         }],
         outputs: [{
             name: "operation.waitAndForward.outputs.output",
-            translationKey: "types.generic",
-            type: "types.generic",
+            translationKey: "types.any",
+            type: "any",
         }],
         execute: async ({ "operation.waitAndForward.inputs.input": input }) => {
             console.info("Waiting for 2 seconds before forwarding:", input);

@@ -156,7 +156,7 @@
   },
   "graph": {
     "types": {
-      "generic": "any",
+      "any": "any",
       "text": {
         "any": "Text",
         "base64": "Text (Base64)"
@@ -164,12 +164,12 @@
     },
     "nodes": {
       "input": {
-        "generic": {
+        "any": {
           "name": "Input"
         }
       },
       "output": {
-        "generic": {
+        "any": {
           "name": "Output"
         }
       },

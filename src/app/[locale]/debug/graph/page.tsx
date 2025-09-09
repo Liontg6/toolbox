@@ -15,6 +15,9 @@ export default function Home() {
                 createNode("concatenateStrings", "3", { x: 350, y: 50 }),
                 createNode("waitAndForward", "4", { x: 450, y: 50 }),
                 createNode("output", "5", { x: 550, y: 50 }),
+                createNode("inputNumeric", "6", { x: 50, y: 200 }),
+                createNode("concatenateStrings", "7", { x: 350, y: 200 }),
+                createNode("concatenateStrings", "8", { x: 350, y: 200 }),
             ]} />
         </Section>
     );
