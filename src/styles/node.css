@@ -9,6 +9,18 @@
     initial-value: 0deg;
 }
 
+@layer base {
+  :root {
+    --edge-color: #222222AA;
+  }
+
+  .dark {
+    --edge-color: #ffe9c4AA;
+  }
+}
+
+
+
 @keyframes rotatingRainbowGradient {
     0% {
         --rainbow-rotation-angle: 0deg;

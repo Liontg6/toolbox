@@ -230,7 +230,7 @@ export function Graph({
 }
 
 
-function PreviewEdge({
+function Edge({
     fromId,
     toId,
     startPosition,
@@ -253,7 +253,7 @@ function PreviewEdge({
                   ${currentPosition.x - Math.min(100, geomDistance)} ${currentPosition.y},
                   ${currentPosition.x} ${currentPosition.y}
             `}
-            stroke="blue"
+            stroke="var(--edge-color)"
             strokeWidth="2"
             fill="none"
             strokeLinecap="round"
@@ -307,7 +307,7 @@ const useEdgeRenderer = (
             };
 
             return (
-                <PreviewEdge
+                <Edge
                     key={index}
                     fromId={edge.fromIO.nodeId}
                     toId={edge.toIO?.nodeId}
@@ -327,7 +327,7 @@ const useEdgeRenderer = (
             graphRef.current?.removeEventListener("transitionend", recaculateEdges);
             graphRef.current?.removeEventListener("scroll", recaculateEdges);
         };
-    }, [graphRef, edges, nodes, setRenderedEdges]);
+    }, [graphRef, graphRef.current, edges, nodes, setRenderedEdges]);
 
     useLayoutEffect(() => {
         recaculateEdges();
