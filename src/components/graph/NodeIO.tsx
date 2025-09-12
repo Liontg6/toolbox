@@ -44,7 +44,12 @@ export const NodeIO: React.FC<NodeIOProps> = ({ type, onConnectNodes, nodeId, io
         e.preventDefault();
 
         e.dataTransfer.dropEffect = "move";
-        const fromIO = JSON.parse(e.dataTransfer.getData("fromIO")) as NodeIOIdentifier;
+
+        const fromIoJSON = e.dataTransfer.getData("fromIO");
+        if(fromIoJSON == undefined || fromIoJSON.length == 0)
+            return;
+
+        const fromIO = JSON.parse(fromIoJSON) as NodeIOIdentifier;
         console.log({ fromIO, node_IO_identifier });
 
         setPreviewEdge?.({
