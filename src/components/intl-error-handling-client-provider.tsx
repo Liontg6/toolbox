@@ -17,7 +17,7 @@ export default function IntlErrorHandlingProvider(
             locale={locale}
             onError={(error) => {
                 if (error.code != "MISSING_MESSAGE") {
-                    console.warn(error);
+                    console.error(error);
                 }
             }}
             getMessageFallback={({ namespace, key }) => {
