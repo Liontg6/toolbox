@@ -2,6 +2,8 @@
 
 import { NextIntlClientProvider, useMessages } from "next-intl";
 
+const warningsShown: string[] = [];
+
 /**
  * Handles client side internationalization with error handling.
  */
@@ -13,14 +15,21 @@ export default function IntlErrorHandlingProvider(
     return (
         <NextIntlClientProvider
             locale={locale}
-            onError={(error) => console.warn(error)}
+            onError={(error) => {
+                if (error.code != "MISSING_MESSAGE") {
+                    console.warn(error);
+                }
+            }}
             getMessageFallback={({ namespace, key }) => {
                 const path = [namespace, key].filter((part) => part != null)
                     .join(".");
 
-                console.warn(
-                    `Missing translation for "${path}" in locale "${locale}".`,
-                );
+                if (!warningsShown.includes(path + locale)) {
+                    console.warn(
+                        `Missing translation for "${path}" in locale "${locale}".`,
+                    );
+                    warningsShown.push(path + locale);
+                }
 
                 return messages[key] ?? `[${key}]`;
             }}
