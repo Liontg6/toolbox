@@ -75,6 +75,13 @@
           "description": "Kodiert oder dekodiert Text als Base64"
         }
       },
+      "conversion": {
+        "title": "Umrechnung",
+        "CelciusToFahrenheit": {
+          "title": "Celcius zu Fahrenheit",
+          "description": "Temperaturumrechner"
+        }
+      },
       "color": {
         "title": "Farbe",
         "hexToHSL": {

@@ -79,6 +79,13 @@
           "description": "Encode or decode text as Unicode Binary"
         }
       },
+      "conversion": {
+        "title": "Conversion",
+        "CelciusToFahrenheit": {
+          "title": "Celcius To Fahrenheit",
+          "description": "Temperature Converter"
+        }
+      },
       "color": {
         "title": "Color",
         "hexToHSL": {
