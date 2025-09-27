@@ -11,22 +11,24 @@ export default function TemperatureConverter() {
     const value = e.target.value;
     setFahrenheit(value);
     const num = parseFloat(value);
-    if (!isNaN(num)) {
-      setCelsius(convertTemp("FC", num).toFixed(2) + "°C");
-    } else {
+    
+    if (isNaN(num)) {
       setCelsius("");
+      return;
     }
+    
+    setCelsius(convertTemp("FC", num).toFixed(2) + "°C");
   }
 
   function handleCelsiusChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setCelsius(value);
     const num = parseFloat(value);
-    if (!isNaN(num)) {
-      setFahrenheit(convertTemp("CF", num).toFixed(2) + "°F");
-    } else {
+    if (isNaN(num)) {
       setFahrenheit("");
+      return;
     }
+    setFahrenheit(convertTemp("CF", num).toFixed(2) + "°F");
   }
 
   return (
