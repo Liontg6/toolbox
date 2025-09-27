@@ -2,10 +2,15 @@
 import { Section } from "@/components/ui/Section";
 import { useState } from "react";
 import { convertTemp } from "./tempraturConverter";
+import { useTranslations } from "next-intl";
+
 
 export default function TemperatureConverter() {
   const [fahrenheit, setFahrenheit] = useState("");
   const [celsius, setCelsius] = useState("");
+  
+  const t = useTranslations("tools.conversion.CelciusToFahrenheit")
+
   // Handlers for input changes
   function handleFahrenheitChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
@@ -33,10 +38,10 @@ export default function TemperatureConverter() {
 
   return (
     <div className="flex flex-col gap-6 pt-4 max-w-md mx-auto">
-      <h2 className="text-lg font-semibold mb-2 text-center">Fahrenheit ⇄ Celsius Converter</h2>
+      <h2 className="text-lg font-semibold mb-2 text-center">{t("title")}</h2>
       <div className="flex flex-row gap-4 justify-center items-center">
         <div className="flex flex-col items-center">
-          <label className="text-sm mb-1" htmlFor="fahrenheit">Fahrenheit</label>
+          <label className="text-sm mb-1" htmlFor="fahrenheit">{t("fahrenheit")}</label>
           <input
             id="fahrenheit"
             value={fahrenheit}
@@ -47,7 +52,7 @@ export default function TemperatureConverter() {
         </div>
         <span className="text-xl font-bold">⇄</span>
         <div className="flex flex-col items-center">
-          <label className="text-sm mb-1" htmlFor="celsius">Celsius</label>
+          <label className="text-sm mb-1" htmlFor="celsius">{t("celcius")}</label>
           <input
             id="celsius"
             value={celsius}
@@ -58,9 +63,9 @@ export default function TemperatureConverter() {
         </div>
       </div>
       <Section variant="ghost">
-        <h2 className="header-section-2">Was macht dieser Converter?</h2>
+        <h2 className="header-section-2">{t("description.title")}</h2>
         <p>
-          Dieser Converter rechnet Temperaturen zwischen Fahrenheit und Celsius um. Gib einen Wert ein und erhalte sofort das Ergebnis in der anderen Einheit.
+          {t("description.text")}
         </p>
       </Section>
     </div>
